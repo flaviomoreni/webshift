@@ -2,7 +2,7 @@
 *.class
 
 #configuracao do banco fiap
-/resources/application.properties
+/resources/application.properties/
 
 # Log file
 *.log
