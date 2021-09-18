@@ -1,3 +1,4 @@
+br\com\fiap\webshift\controller\UsuarioController.class
 br\com\fiap\webshift\WebshiftApplication.class
 br\com\fiap\webshift\repository\LojaRepository.class
 br\com\fiap\webshift\controller\LojaController.class

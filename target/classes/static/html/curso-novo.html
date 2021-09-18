@@ -17,28 +17,37 @@
 <script>
     $(document).ready(function () {
 
+        var endpoint = "https://5cb544bd07f233001424ceb8.mockapi.io/fiap/curso";
+
         $("#botaoGravar").click(function () {
 
-            var dadosFormulario = new FormData($("#formCurso"));
+            var dadosFormulario = new FormData($("#formCurso")[0]);
             var cursoJson = Object.fromEntries(dadosFormulario.entries());
-            alert(cursoJson);
+
+
+            var header = {
+                method: 'POST',
+                body: JSON.stringify(cursoJson),
+                header: { "Content-type": "application/json" }
+            };
+
+            fetch(endpoint, header)
+                .then(response => response.json())
+                .catch((error) => {
+                    alert('Erro ao inserir o Curso! Detalhes: ' + error);
+                })
+                .then(data => {
+                    alert('Curso inserido com sucesso!');
+
+                    // limpando o formulário
+                    $("#formCurso").each(function () {
+                        this.reset();
+                    });
+
+                });
+
         });
 
-
-
-        /*
-        var header = {
-            method: 'GET',
-            header: { "Content-type": "application/json" }
-        };
-
-        fetch(endpoint, header)
-            .then(response => response.json())
-            .then(data => {
-                $('#tabelaCursos > tbody').json2html(data, htmlTableTemplate);
-            })
-            .catch(erro => alert('Não foi possível obter a lista de cursos! ' + erro));
-            */
     });
 </script>
 

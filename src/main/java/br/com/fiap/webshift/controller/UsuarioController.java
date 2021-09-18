@@ -28,14 +28,15 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	
+	@CrossOrigin
 	@GetMapping
 	public ResponseEntity<List<UsuarioModel>> findAll() {
-		
 		List<UsuarioModel> lista = usuarioRepository.findAll(); 
-		
 		return ResponseEntity.ok(lista);
 	}
 	
+	@CrossOrigin
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioModel> findById(@PathVariable("id") int id){
 		if ( usuarioRepository.existsById(id) ) {
@@ -47,12 +48,29 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{email}/{senha}")
-	public ResponseEntity<UsuarioModel> findByEmailAndSenha(@PathVariable("email") String email, @PathVariable("senha") String senha ){
+	public ResponseEntity<UsuarioModel> findByLogin(
+			@PathVariable("email")String email, 
+			@PathVariable("senha")String senha) {
+		
 		UsuarioModel model = usuarioRepository.findByEmailAndSenha(email, senha);
-		return ResponseEntity.ok(model);
+		
+		if ( model == null) {
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok(model);
+		}
+		
 	}
 	
 	
+	@GetMapping("/idade/{idade}")
+	public ResponseEntity<Long> getTotalByIdade(@PathVariable("idade") int idade){
+		Long quantidade = usuarioRepository.getTotalByIdade(idade);
+		return ResponseEntity.ok(quantidade);
+	}
+	
+	
+	@CrossOrigin
 	@PostMapping
 	public ResponseEntity save(@RequestBody UsuarioModel usuarioModel) {
 		
@@ -66,6 +84,7 @@ public class UsuarioController {
 	}
 	
 	
+	@CrossOrigin
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable("id") int codigoUsuario, @RequestBody UsuarioModel usuarioModel) {
 		
@@ -80,7 +99,7 @@ public class UsuarioController {
 		
 	}
 	
-	
+	@CrossOrigin
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable("id") int id) {
 		usuarioRepository.deleteById(id);
