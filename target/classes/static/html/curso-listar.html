@@ -62,6 +62,7 @@
         fetch(endpoint, header)
             .then(response => response.json())
             .then(data => {
+                //alert(JSON.stringify(data));
                 $('#tabelaCursos > tbody').json2html(data, htmlTableTemplate);
             })
             .catch(erro => alert('Não foi possível obter a lista de cursos! ' + erro));

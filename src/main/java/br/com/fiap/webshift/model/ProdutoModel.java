@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="PRODUTO")
@@ -29,7 +31,7 @@ public class ProdutoModel {
 	@Column(name = "ID_PRODUTO")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUTO_SEQ")
 	@SequenceGenerator(name = "PRODUTO_SEQ", initialValue = 1, allocationSize = 1)
-	private long id;
+	private int id;
 
 	
 	@Column(name = "NOME")
@@ -63,22 +65,23 @@ public class ProdutoModel {
 	private Date dataLancamento;
 	
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ID_CATEGORIA", nullable = false)
 	private CategoriaModel categoria;
 	
 	
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ID_MARCA", nullable = false)
 	private MarcaModel marca;
 
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
