@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>Shop page - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/2.1.0/json2html.min.js"></script>
+
+
+
+
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Produto</h2>
+                <div id="produto">
+                    <div class="form-group">
+                        <label class="control-label" for="nome">Nome:</label>
+                        <label class="label label-default">${produtoModel.nome}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="nome">Categoria:</label>
+                        <label class="label label-default">${produtoModel.categoriaModel.nomeCategoria}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="lojas">Lojas:</label>
+                        <c:forEach items="${produtoModel.lojas}" var="lojas">
+                            <label class="label label-default">${lojas.nomeLoja}</label>
+                        </c:forEach>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="nome">SKU:</label>
+                        <label class="label label-default">${produtoModel.sku}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="mesnagem">Descrição:</label>
+                        <label class="label label-default">${produtoModel.descricao}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="preco">Preço:</label>
+                        <label class="label label-default">${produtoModel.preco}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="mesnagem">Características:</label>
+                        <label class="label label-default">${produtoModel.caracteristicas}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="mesnagem">Data de Lançamento:</label>
+                        <label class="label label-default">
+                            <fmt:formatDate pattern="dd/MM/yyyy" value="${produtoModel.dataLancamento}" />
+                        </label>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        var url = new URL(window.location);
+        var idProduto = url.searchParams.get("idProduto");
+
+        loadProduto(idProduto);
+    });
+
+
+
+    function loadProduto(idProduto) {
+        $('#produto').html('');
+
+        var template = {
+            children: [
+                {
+                    'tag': 'img',
+                    'class': 'img-responsive',
+                    'src': '${foto}'
+                }, {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'nome',
+                        'html': 'Nome:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'html': '${nome}',
+                    }]
+                },
+                {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'preco',
+                        'html': 'Preço:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'html': '${preco}',
+                    }]
+                },
+                {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'descricao',
+                        'html': 'Descrição:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'html': '${descricao}',
+                    }]
+                },
+                {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'categoria',
+                        'html': 'Categoria:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'html': '${categoria.nomeCategoria}',
+                    }]
+                },
+                {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'marca',
+                        'html': 'Marca:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'html': '${marca.nomeMarca}',
+                    }]
+                },
+                {
+                    'tag': 'div',
+                    'class': 'form-group',
+                    children: [{
+                        'tag': 'label',
+                        'class': 'control-label',
+                        'for': 'lojas',
+                        'html': 'Lojas:',
+                    },
+                    {
+                        'tag': 'label',
+                        'class': 'label label-default',
+                        'id': 'lojas'
+                    }]
+                }
+            ]
+        };
+
+        var templateLojas = {
+            children: [{
+                'tag': 'span',
+                'html': '${nomeLoja}, '
+            }]
+        };
+
+        var endpoint = "http://localhost:8080/produto/" + idProduto;
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                $('#produto').json2html(data, template);
+                $('#lojas').json2html(data.lojas, templateLojas);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+
+
+
+
+    }
+
+</script>
+
+</html>

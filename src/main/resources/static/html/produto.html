@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>Shop page - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/2.1.0/json2html.min.js"></script>
+
+
+
+
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-md-3">
+                <form>
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <input type="text" id="nomeProduto" class="form-control"
+                                        placeholder="Search products...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="button" id="botaoPesquisarNome">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Filter -->
+                <form class="shop__filter">
+                    <!-- Price -->
+                    <h3 class="headline">
+                        <span>Preço</span>
+                    </h3>
+                    <div class="radio">
+                        <input type="radio" name="faixaPreco" id="faixaPreco1" value="precoMenor25">
+                        <label for="faixaPreco1">Abaixo R$25</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" name="faixaPreco" id="faixaPreco2" value="precoMaior25">
+                        <label for="faixaPreco2">R$25 até $50</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" name="faixaPreco" id="faixaPreco3" value="precoMenor50">
+                        <label for="faixaPreco3">R$50 até R$100</label>
+                    </div>
+
+
+                    <!-- Checkboxes -->
+                    <h3 class="headline">
+                        <span>Marcas</span>
+                    </h3>
+                    <div id="marcas">
+                        <input type="checkbox" name="idMarca" id="idMarca1" value="1">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-sm-8 col-md-9">
+                <!-- Filters -->
+                <ul class="shop__sorting">
+                    <li class="active"><a id="linkOrdemPopulares" href="#">Popular</a></li>
+                    <li><a id="linkOrdemNovos" href="#">Novos</a></li>
+                    <li><a id="linkOrdemPrecoMenor" href="#">Preço (menor)</a></li>
+                    <li><a id="linkOrdemPrecoMaior" href="#">Preço (maior)</a></li>
+                </ul>
+
+                <div class="row">
+                    <div id="produtos">
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+
+        </div> <!-- / .col-sm-8 -->
+    </div> <!-- / .row -->
+    </div>
+
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        // Carga inicial
+        var marcas = [];
+        loadMarcas();
+
+        loadProdutosFullList();
+
+
+        // Adicionando os eventos nos elementos visuais
+        $("#linkOrdemPopulares").click(function () {
+            loadProdutosFullList();
+        });
+
+        $("#linkOrdemNovos").click(function () {
+            loadProdutosNovos();
+        });
+
+        $("#linkOrdemPrecoMenor").click(function () {
+            loadProdutosPrecoAsc();
+        });
+
+        $("#linkOrdemPrecoMaior").click(function () {
+            loadProdutosPrecoDesc();
+        });
+
+        $("#botaoPesquisarNome").click(function () {
+            var nomeDigitado = $("#nomeProduto").val();
+            loadProdutosByName(nomeDigitado);
+        });
+
+    });
+
+
+    function loadProdutosByMarcas(idMarca) {
+        var listaProdutos = [];
+
+        var params = "";
+        idMarca.forEach(function (item) {
+            params += "idMarca=" + item + "&";
+        });
+
+        var endpoint = "http://localhost:8080/produto/marcas?" + params;
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+
+    function loadProdutosPrecoAsc() {
+        var listaProdutos = [];
+
+        var endpoint = "http://localhost:8080/produto/precoAsc";
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+    function loadProdutosPrecoDesc() {
+        var listaProdutos = [];
+
+        var endpoint = "http://localhost:8080/produto/precoDesc";
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+
+    function loadProdutosNovos() {
+        var listaProdutos = [];
+
+        var endpoint = "http://localhost:8080/produto/novos";
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+
+
+    function loadProdutosByName(nome) {
+        var listaProdutos = [];
+
+        var endpoint = "http://localhost:8080/produto/nome?nome=" + nome;
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+    function loadProdutosFullList() {
+        var listaProdutos = [];
+
+        var endpoint = "http://localhost:8080/produto";
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                loadProduto(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos produtos. ' + error);
+            });
+
+    }
+
+
+    function loadProduto(data) {
+        $('#produtos').html('');
+
+        var template = {
+            tag: 'div',
+            class: 'col-sm-6 col-md-4',
+            children: [{
+                'tag': 'div',
+                'class': 'shop__thumb',
+                children: [{
+                    'tag': 'a',
+                    'target': '_blank',
+                    'href': 'produto-detalhe.html?idProduto=${id}',
+                    children: [{
+                        'tag': 'div',
+                        'class': 'shop-thumb__img',
+
+                        children: [{
+                            'tag': 'img',
+                            'class': 'img-responsive',
+                            'src': '${foto}'
+                        }]
+                    },
+                    {
+                        'tag': 'h5',
+                        'class': 'shop-thumb__title',
+                        'html': '${nome}'
+                    },
+                    {
+                        'tag': 'div',
+                        'class': 'shop-thumb__price',
+                        children: [{
+                            'tag': 'span',
+                            'class': 'shop-thumb-price_old',
+                            'html': 'R$ ${preco}'
+                        },
+                        {
+                            'tag': 'span',
+                            'class': 'shop-thumb-price_new',
+                            'html': 'R$ ${preco}'
+                        }]
+                    }]
+                }]
+            }]
+        };
+
+
+        $('#produtos').json2html(data, template);
+
+    }
+    async function loadMarcas() {
+        var endpoint = "http://localhost:8080/marca";
+
+        var template = {
+            tag: 'div',
+            class: 'checkbox',
+            children: [{
+                'tag': 'input',
+                'type': 'checkbox',
+                'name': 'idMarca',
+                'id': 'idMarca${idMarca}',
+                'value': '${idMarca}',
+            }, {
+                'tag': 'label',
+                'for': 'idMarca${idMarca}',
+                'html': "${nomeMarca}"
+            }]
+        };
+
+        var header = {
+            method: 'GET',
+            header: { "Content-type": "application/json" }
+        };
+
+        fetch(endpoint, header)
+            .then(response => response.json())
+            .then(data => {
+                $('#marcas').html('');
+                $('#marcas').json2html(data, template);
+
+                $("input[name='idMarca']").change(function () {
+                    marcas = [];
+                    $("input[name='idMarca']").each(function () {
+                        if (this.checked) {
+                            marcas.push($(this).val());
+                        }
+                    });
+
+                    if (marcas.length == 0) {
+                        loadProdutosFullList();
+                    } else {
+                        loadProdutosByMarcas(marcas);
+                    }
+
+                });
+
+
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert('Não foi possível efetuar a consulta dos marcas. ' + error);
+            });
+
+    }
+</script>
+
+</html>

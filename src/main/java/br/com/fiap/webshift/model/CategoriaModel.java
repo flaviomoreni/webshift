@@ -10,8 +10,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="CATEGORIA")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="idCategoria")
 public class CategoriaModel {
 
 	
