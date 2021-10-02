@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.fiap.webshift.model.LojaModel;
 
-//@Repository
-public interface LojaRepository /*extends JpaRepository<LojaModel, Long>*/ {
+@Repository
+public interface LojaRepository extends JpaRepository<LojaModel, Integer> {
 
 }

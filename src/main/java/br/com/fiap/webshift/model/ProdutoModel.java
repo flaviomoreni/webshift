@@ -1,7 +1,9 @@
 package br.com.fiap.webshift.model;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -22,7 +26,6 @@ import org.springframework.format.annotation.NumberFormat.Style;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -46,6 +49,9 @@ public class ProdutoModel {
 	@NotNull(message = "Sku obrigatório")
 	@Size(min = 2, max = 40, message = "SKU deve ser entre 2 e 50 caracteres")
 	private String sku;
+	
+	@Column(name = "FOTO")
+	private String foto;
 	
 	@Column(name = "DESCRICAO")
 	@NotNull(message = "Descrição obrigatório")
@@ -73,12 +79,18 @@ public class ProdutoModel {
 	private CategoriaModel categoria;
 	
 	
-	//@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ID_MARCA", nullable = false)
 	private MarcaModel marca;
 
-
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable( name = "PRODUTO_LOJA" , 
+				joinColumns = @JoinColumn ( name = "ID_PRODUTO" , referencedColumnName = "ID_PRODUTO") ,
+				inverseJoinColumns = @JoinColumn (name = "ID_LOJA" , referencedColumnName = "ID_LOJA")  )
+	private List<LojaModel> lojas;
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -166,6 +178,26 @@ public class ProdutoModel {
 
 	public void setMarca(MarcaModel marca) {
 		this.marca = marca;
+	}
+
+
+	public List<LojaModel> getLojas() {
+		return lojas;
+	}
+
+
+	public void setLojas(List<LojaModel> lojas) {
+		this.lojas = lojas;
+	}
+
+
+	public String getFoto() {
+		return foto;
+	}
+
+
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 	
 	
